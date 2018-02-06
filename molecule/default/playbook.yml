@@ -1,8 +1,51 @@
 ---
 - name: Converge
   hosts: all
+  tags:
+    - nvm
+  become: yes
+  become_method: sudo
+  vars:
+    bossjones__user: vagrant
+    bossjones__group: vagrant
+  # SOURCE: https://docs.ansible.com/ansible/latest/playbooks_environment.html
+  environment:
+    SHELL: /bin/bash
   roles:
     - role: boss-ansible-role-nvm
       bossjones__user: vagrant
       bossjones__group: vagrant
-
+      boss__nvm_repo: "git://github.com/creationix/nvm.git"
+      boss__nvm_root: "/home/{{ bossjones__user }}/.nvm"
+      boss__nvm_env: user
+      boss__nvm_version: v0.33.1
+      boss__nvm_default_node_version: stable
+      boss__nvm_node_versions:
+        - stable
+      boss__nvm_global_packages:
+        - vtop
+        - whereami
+        - figlet-cli
+        - get-port-cli
+        - getmac
+        - mediumcli
+        - speed-test
+        - spoof
+        - tldr
+        - wireless-tools
+        - yaml-lint
+        - pathogen-pm
+        - manga-scraper
+        - gtop
+        - historie
+        - nodemon
+        - npm
+        - release-it
+        - spot
+        - superstatic
+        - svgo
+        - underscore-cli
+        - diff-so-fancy
+        - docker-enter
+      boss__nvm_users:
+        - "{{ bossjones__user }}"

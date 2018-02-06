@@ -11,7 +11,7 @@ platforms:
   # source: https://github.com/solita/docker-systemd
   # source: https://github.com/solita/docker-systemd-ssh/blob/master/Dockerfile
   #
-  - name: xenial
+  - name: nvm-xenial
     image: solita/ubuntu-systemd
     image_version: latest
     privileged: True
@@ -22,15 +22,6 @@ platforms:
     volumes:
       - /sys/fs/cgroup:/sys/fs/cgroup:ro
     command: /sbin/init
-  # - name: fedora-01
-  #   image: bossjones/fedora24-systemd-ansible:latest
-  #   privileged: True
-  #   command: /usr/sbin/init
-  #   # run_opts: "--privileged --volume=/sys/fs/cgroup:/sys/fs/cgroup:ro"
-  #   # init: /usr/lib/systemd/systemd
-  #   groups:
-  #     - fedora
-  # TODO: USE THESES
   # SOURCE: https://zapier.com/engineering/ansible-molecule/
   #   - name: centos7
   #   image: retr0h/centos7-systemd-ansible

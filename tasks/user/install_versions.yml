@@ -1,0 +1,22 @@
+---
+- name: install versions for each user
+  shell: bash -lc "nvm install {{ item.1 }}"
+  become: true
+  become_user: "{{ item.0 }}"
+  with_nested:
+    - "{{ boss__nvm_users }}"
+    - "{{ boss__nvm_node_versions }}"
+  register: output
+  changed_when: "'already installed.' not in output.stderr"
+
+- name: create alias directory for each user
+  file: path="{{ boss__nvm_root }}/alias" state=directory
+  become: true
+  become_user: "{{ item }}"
+  with_items: "{{ boss__nvm_users }}"
+
+- name: set {{ boss__nvm_default_node_version }} as default version for each user
+  copy: dest="{{ boss__nvm_root }}/alias/default" content="{{ boss__nvm_default_node_version }}"
+  become: true
+  become_user: "{{ item }}"
+  with_items: "{{ boss__nvm_users }}"

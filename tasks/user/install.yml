@@ -1,0 +1,10 @@
+---
+- name: checkout boss__nvm_repo for selected users
+  git: >
+    repo={{ boss__nvm_repo }}
+    dest={{ boss__nvm_root }}
+    version={{ boss__nvm_version }}
+    accept_hostkey=true
+  with_items: "{{ boss__nvm_users }}"
+  become: true
+  become_user: "{{ item }}"
