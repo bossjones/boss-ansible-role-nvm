@@ -9,8 +9,8 @@
     bossjones__user: vagrant
     bossjones__group: vagrant
   # SOURCE: https://docs.ansible.com/ansible/latest/playbooks_environment.html
-  environment:
-    SHELL: /bin/bash
+  # environment:
+  #   SHELL: /bin/bash
   roles:
     - role: boss-ansible-role-nvm
       bossjones__user: vagrant
