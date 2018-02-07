@@ -3,8 +3,8 @@
   hosts: all
   tags:
     - nvm
-  # become: yes
-  # become_method: sudo
+  become: yes
+  become_method: sudo
 
   vars:
     bossjones__user: vagrant
