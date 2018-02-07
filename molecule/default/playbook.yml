@@ -5,7 +5,6 @@
     - nvm
   become: yes
   become_method: sudo
-
   vars:
     bossjones__user: vagrant
     bossjones__group: vagrant
@@ -15,7 +14,7 @@
   pre_tasks:
 
     - name: Install ubuntu packages
-      apt: pkg={{item}} state=latest update_cache=yes
+      apt: pkg={{item}} state=present update_cache=yes
       with_items:
         - pkg-config
         - wget
@@ -44,7 +43,6 @@
     - role: boss-ansible-role-users
       boss__users_users:
       - username: vagrant
-        # 'wheel', - BSD
         groups: ['sudo', 'adm', 'vagrant']
         append: yes
         uid: 1000
