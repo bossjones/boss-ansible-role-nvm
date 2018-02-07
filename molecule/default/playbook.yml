@@ -3,11 +3,12 @@
   hosts: all
   tags:
     - nvm
-  become: yes
-  become_method: sudo
+  # become: yes
+  # become_method: sudo
+
   vars:
-    bossjones__user: root
-    bossjones__group: root
+    bossjones__user: vagrant
+    bossjones__group: vagrant
   # SOURCE: https://docs.ansible.com/ansible/latest/playbooks_environment.html
   environment:
     SHELL: /bin/bash
@@ -30,7 +31,26 @@
       become: yes
       become_user: root
 
+# SOURCE: https://github.com/metacloud/molecule/issues/551
+    # - name: remove default sudo require tty
+    #   lineinfile: regexp="tty" dest=/etc/sudoers/os_defaults state=absent
+    #   tags: ['common']
+
+    # - name: remove sudo require tty
+    #   lineinfile: regexp="^\s*\w+\s+requiretty" dest=/etc/sudoers state=absent
+    #   tags: ['common']
+
   roles:
+    - role: boss-ansible-role-users
+      boss__users_users:
+      - username: vagrant
+        # 'wheel', - BSD
+        groups: ['sudo', 'adm', 'vagrant']
+        append: yes
+        uid: 1000
+        gid: 1000
+        home: /home/vagrant
+
     - role: boss-ansible-role-nvm
       bossjones__user: root
       bossjones__group: root
