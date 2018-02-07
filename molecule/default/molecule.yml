@@ -1,6 +1,6 @@
 ---
 dependency:
-  name: galaxy
+  name: gilt
 driver:
   name: docker
 lint:
@@ -14,13 +14,13 @@ platforms:
     image: solita/ubuntu-systemd
     image_version: latest
     privileged: True
-    groups:
-        - servers
-    capabilities:
-      - SYS_ADMIN
-    volumes:
-      - /sys/fs/cgroup:/sys/fs/cgroup:ro
-    command: /sbin/init
+    # groups:
+    #     - servers
+    # capabilities:
+    #   - SYS_ADMIN
+    # volumes:
+    #   - /sys/fs/cgroup:/sys/fs/cgroup:ro
+    # command: /sbin/init
 provisioner:
   name: ansible
   options:
@@ -40,13 +40,13 @@ verifier:
     enabled: False
 scenario:
   name: default
-  test_sequence:
-    - destroy
-    - syntax
-    - create
-    - prepare
-    - converge
-    - lint
-    - side_effect
-    - verify
-    - destroy
+  # test_sequence:
+  #   - destroy
+  #   - syntax
+  #   - create
+  #   - prepare
+  #   - converge
+  #   - lint
+  #   - side_effect
+  #   - verify
+  #   - destroy
