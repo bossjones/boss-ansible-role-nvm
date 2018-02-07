@@ -11,6 +11,7 @@
   # SOURCE: https://docs.ansible.com/ansible/latest/playbooks_environment.html
   environment:
     SHELL: /bin/bash
+  verbose: True
   pre_tasks:
 
     - name: Install ubuntu packages
