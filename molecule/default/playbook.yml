@@ -9,8 +9,8 @@
     bossjones__user: root
     bossjones__group: root
   # SOURCE: https://docs.ansible.com/ansible/latest/playbooks_environment.html
-  # environment:
-  #   SHELL: /bin/bash
+  environment:
+    SHELL: /bin/bash
   pre_tasks:
 
     - name: Install ubuntu packages
