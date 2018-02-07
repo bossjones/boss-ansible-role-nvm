@@ -11,6 +11,25 @@
   # SOURCE: https://docs.ansible.com/ansible/latest/playbooks_environment.html
   # environment:
   #   SHELL: /bin/bash
+  pre_tasks:
+
+    - name: Install Debian packages tmux prereqs
+      apt: pkg={{item}} state=latest update_cache=yes
+      with_items:
+        - pkg-config
+        - wget
+        - curl
+        - make
+        - gcc
+        - autoconf
+        - automake
+        - libtool
+        - git
+        - build-essentials
+      when: ansible_os_family == "Debian"
+      become: yes
+      become_user: root
+
   roles:
     - role: boss-ansible-role-nvm
       bossjones__user: root
