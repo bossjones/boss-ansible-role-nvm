@@ -13,7 +13,7 @@
   #   SHELL: /bin/bash
   pre_tasks:
 
-    - name: Install Debian packages tmux prereqs
+    - name: Install ubuntu packages
       apt: pkg={{item}} state=latest update_cache=yes
       with_items:
         - pkg-config
