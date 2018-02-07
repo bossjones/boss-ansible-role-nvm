@@ -6,15 +6,15 @@
   become: yes
   become_method: sudo
   vars:
-    bossjones__user: vagrant
-    bossjones__group: vagrant
+    bossjones__user: root
+    bossjones__group: root
   # SOURCE: https://docs.ansible.com/ansible/latest/playbooks_environment.html
   # environment:
   #   SHELL: /bin/bash
   roles:
     - role: boss-ansible-role-nvm
-      bossjones__user: vagrant
-      bossjones__group: vagrant
+      bossjones__user: root
+      bossjones__group: root
       boss__nvm_repo: "git://github.com/creationix/nvm.git"
       boss__nvm_root: "/home/{{ bossjones__user }}/.nvm"
       boss__nvm_env: user
