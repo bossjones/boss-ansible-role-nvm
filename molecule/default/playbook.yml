@@ -50,8 +50,8 @@
         home: /home/vagrant
 
     - role: boss-ansible-role-nvm
-      bossjones__user: root
-      bossjones__group: root
+      bossjones__user: vagrant
+      bossjones__group: vagrant
       boss__nvm_repo: "git://github.com/creationix/nvm.git"
       boss__nvm_root: "/home/{{ bossjones__user }}/.nvm"
       boss__nvm_env: user
