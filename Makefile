@@ -2,7 +2,9 @@
 
 SHELL=/bin/bash
 
-username := bossjones
+username                  := bossjones
+test_container_name       := ubuntu-trusty
+TEST_IMAGE_NAME           := $(username)/$(test_container_name)
 
 # verify that certain variables have been defined off the bat
 check_defined = \
@@ -116,7 +118,7 @@ travis:
 
 .PHONY: docker_build_ubuntu
 docker_build_ubuntu: ## Builds SD Ubuntu docker container
-	@docker build -t bossjones/ubuntu-trusty:latest -f molecule/default/Dockerfile molecule/default
+	@docker build -t $(TEST_IMAGE_NAME):latest -f molecule/default/Dockerfile molecule/default
 
 start_delegated_docker:
 	docker run \
@@ -126,7 +128,7 @@ start_delegated_docker:
 	-v /sys/fs/cgroup:/sys/fs/cgroup:ro \
 	--name nvm-trusty \
 	--hostname nvm-trusty \
-	-it bossjones/ubuntu-trusty:latest sleep infinity & wait
+	-it $(TEST_IMAGE_NAME):latest sleep infinity & wait
 
 stop_delegated_docker:
 	$(MAKE) docker_clean
