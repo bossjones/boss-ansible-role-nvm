@@ -2,7 +2,9 @@
 
 SHELL=/bin/bash
 
-username := bossjones
+username                  := bossjones
+test_container_name       := ubuntu-trusty
+TEST_IMAGE_NAME           := $(username)/$(test_container_name)
 
 # verify that certain variables have been defined off the bat
 check_defined = \
@@ -105,13 +107,81 @@ test:
 
 bootstrap: venv
 
-travis: bootstrap venv ci
+travis:
+	$(MAKE) bootstrap
+	$(MAKE) venv
+	$(MAKE) docker_clean
+	$(MAKE) docker_build_ubuntu
+	$(MAKE) start_delegated_docker
+	$(MAKE) ci
+	$(MAKE) docker_clean
+
+.PHONY: docker_build_ubuntu
+docker_build_ubuntu: ## Builds SD Ubuntu docker container
+	@docker build -t $(TEST_IMAGE_NAME):latest -f molecule/default/Dockerfile molecule/default
+
+start_delegated_docker:
+	docker run \
+	-d \
+	--privileged=true \
+	--cap-add=SYS_ADMIN \
+	-v /sys/fs/cgroup:/sys/fs/cgroup:ro \
+	--name nvm-trusty \
+	--hostname nvm-trusty \
+	-it $(TEST_IMAGE_NAME):latest sleep infinity & wait
+
+stop_delegated_docker:
+	$(MAKE) docker_clean
+	$(MAKE) docker_clean
+
+# SOURCE: https://github.com/lispmeister/rpi-python3/blob/534ee5ab592f0ab0cdd04a202ca492846ab12601/Makefile
+exited := $(shell docker ps -a -q -f status=exited)
+kill   := $(shell docker ps | grep ubuntu-trusty | awk '{print $$1}')
+# untagged := $(shell (docker images | grep "^<none>" | awk -F " " '{print $$3}'))
+# dangling := $(shell docker images -f "dangling=true" -q)
+# tag := $(shell docker images | grep "$(DOCKER_IMAGE_NAME)" | grep "$(DOCKER_IMAGE_VERSION)" |awk -F " " '{print $$3}')
+# latest := $(shell docker images | grep "$(DOCKER_IMAGE_NAME)" | grep "latest" | awk -F " " '{print $$3}')
+
+# clean: ## Clean old Docker images
+# ifneq ($(strip $(latest)),)
+# 	@echo "Removing latest $(latest) image"
+# 	docker rmi "$(DOCKER_IMAGE_NAME):latest"
+# endif
+# ifneq ($(strip $(tag)),)
+# 	@echo "Removing tag $(tag) image"
+# 	docker rmi "$(DOCKER_IMAGE_NAME):$(DOCKER_IMAGE_VERSION)"
+# endif
+# ifneq ($(strip $(exited)),)
+# 	@echo "Cleaning exited containers: $(exited)"
+# 	docker rm -v $(exited)
+# endif
+# ifneq ($(strip $(dangling)),)
+# 	@echo "Cleaning dangling images: $(dangling)"
+# 	docker rmi $(dangling)
+# endif
+# 	@echo 'Done cleaning.'
+
+
+docker_clean:
+ifneq ($(strip $(kill)),)
+	@echo "Killing containers: $(kill)"
+	docker kill $(kill)
+endif
+ifneq ($(strip $(exited)),)
+	@echo "Cleaning exited containers: $(exited)"
+	docker rm -v $(exited)
+endif
+
 
 travis-osx:
 	$(MAKE) venv-osx
 	$(MAKE) upgrade-setuptools
 	$(MAKE) venv-osx
+	$(MAKE) docker_clean
+	$(MAKE) docker_build_ubuntu
+	$(MAKE) start_delegated_docker
 	$(MAKE) ci
+	$(MAKE) docker_clean
 
 # OSX Order of operations, make travis-osx; . venv/bin/activate; make upgrade-setuptools; make travis-osx;
 

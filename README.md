@@ -36,3 +36,10 @@ Author Information
 ------------------
 
 An optional section for the role authors to include contact information, or a website (HTML is not allowed).
+
+
+INSPIRATION:
+-------------------------
+Completely inspired by https://github.com/pablocrivella/ansible-role-nvm !!!
+
+

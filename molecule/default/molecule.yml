@@ -1,8 +1,14 @@
 ---
 dependency:
-  name: galaxy
+  name: gilt
+# delegate example: https://github.com/freedomofpress/securedrop/blob/30257872db2ccad24141ff24269ff2f959a519fd/molecule/builder/create.yml
 driver:
-  name: docker
+  name: delegated
+  options:
+    managed: false
+    login_cmd_template: 'docker exec --user vagrant --tty -ti {instance} env TERM=xterm bash'
+    ansible_connection_options:
+      ansible_connection: docker
 lint:
   name: yamllint
   enabled: False
@@ -10,42 +16,25 @@ platforms:
   # source: https://blog.opsfactory.rocks/testing-ansible-roles-with-molecule-97ceca46736a
   # source: https://github.com/solita/docker-systemd
   # source: https://github.com/solita/docker-systemd-ssh/blob/master/Dockerfile
-  #
-  - name: xenial
-    image: solita/ubuntu-systemd
-    image_version: latest
-    privileged: True
-    groups:
-        - servers
-    capabilities:
-      - SYS_ADMIN
-    volumes:
-      - /sys/fs/cgroup:/sys/fs/cgroup:ro
-    command: /sbin/init
-  # - name: fedora-01
-  #   image: bossjones/fedora24-systemd-ansible:latest
-  #   privileged: True
-  #   command: /usr/sbin/init
-  #   # run_opts: "--privileged --volume=/sys/fs/cgroup:/sys/fs/cgroup:ro"
-  #   # init: /usr/lib/systemd/systemd
-  #   groups:
-  #     - fedora
-  # TODO: USE THESES
-  # SOURCE: https://zapier.com/engineering/ansible-molecule/
-  #   - name: centos7
-  #   image: retr0h/centos7-systemd-ansible
-  #   image_version: latest
-  #   privileged: True
-  # - name: consul-ubuntu-16.04
-  #   image: solita/ubuntu-systemd
-  #   image_version: latest
-  #   privileged: True
-  # - name: consul-ubuntu-14.04
-  #   image: ubuntu-upstart
-  #   image_version: latest
-  #   privileged: True
+  - name: nvm-trusty
+    # image: solita/ubuntu-systemd
+    # image_version: latest
+    # privileged: True
+    # groups:
+    #     - servers
+    # capabilities:
+    #   - SYS_ADMIN
+    # volumes:
+    #   - /sys/fs/cgroup:/sys/fs/cgroup:ro
+    # # command: /sbin/init
+    # command: /lib/systemd/systemd
 provisioner:
   name: ansible
+  playbooks:
+    prepare: ''
+    create: ''
+  options:
+    vvv: True
   lint:
     name: ansible-lint
     enabled: False
@@ -63,11 +52,42 @@ scenario:
   name: default
   test_sequence:
     - destroy
-    - syntax
+    - dependency
     - create
-    - prepare
     - converge
-    - lint
-    - side_effect
     - verify
     - destroy
+
+
+# NOTE: defalt scenario
+# SOURCE: https://molecule.readthedocs.io/en/latest/configuration.html#dependency
+# scenario:
+#   name: default
+#   create_sequence:
+#     - create
+#     - prepare
+#   check_sequence:
+#     - destroy
+#     - create
+#     - prepare
+#     - converge
+#     - check
+#     - destroy
+#   converge_sequence:
+#     - create
+#     - prepare
+#     - converge
+#   destroy_sequence:
+#     - destroy
+#   test_sequence:
+#     - lint
+#     - destroy
+#     - dependency
+#     - syntax
+#     - create
+#     - prepare
+#     - converge
+#     - idempotence
+#     - side_effect
+#     - verify
+#     - destroy

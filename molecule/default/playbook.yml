@@ -1,8 +1,66 @@
 ---
 - name: Converge
   hosts: all
+  tags:
+    - nvm
+  become: yes
+  become_method: sudo
+  vars:
+    bossjones__user: vagrant
+    bossjones__group: vagrant
+  # SOURCE: https://docs.ansible.com/ansible/latest/playbooks_environment.html
+  environment:
+    SHELL: /bin/bash
+  pre_tasks:
+
+    - name: Install ubuntu packages
+      apt: pkg={{item}} state=present update_cache=yes
+      with_items:
+        - pkg-config
+        - wget
+        - curl
+        - make
+        - gcc
+        - autoconf
+        - automake
+        - libtool
+        - git
+        - build-essential
+      when: ansible_os_family == "Debian"
+      become: yes
+      become_user: root
+
+# SOURCE: https://github.com/metacloud/molecule/issues/551
+    # - name: remove default sudo require tty
+    #   lineinfile: regexp="tty" dest=/etc/sudoers/os_defaults state=absent
+    #   tags: ['common']
+
+    # - name: remove sudo require tty
+    #   lineinfile: regexp="^\s*\w+\s+requiretty" dest=/etc/sudoers state=absent
+    #   tags: ['common']
+
   roles:
+    - role: boss-ansible-role-users
+      boss__users_users:
+      - username: vagrant
+        groups: ['sudo', 'adm', 'vagrant']
+        append: yes
+        uid: 1000
+        gid: 1000
+        home: /home/vagrant
+
     - role: boss-ansible-role-nvm
       bossjones__user: vagrant
       bossjones__group: vagrant
-
+      boss__nvm_repo: "git://github.com/creationix/nvm.git"
+      boss__nvm_root: "/home/{{ bossjones__user }}/.nvm"
+      boss__nvm_env: user
+      boss__nvm_version: v0.33.1
+      boss__nvm_default_node_version: stable
+      boss__nvm_node_versions:
+        - stable
+      boss__nvm_global_packages:
+        - vtop
+        - gtop
+      boss__nvm_users:
+        - "{{ bossjones__user }}"

@@ -1,2 +1,11 @@
 ---
 # defaults file for boss-ansible-role-nvm
+boss__nvm_env: system
+boss__nvm_version: v0.31.6
+boss__nvm_default_node_version: stable
+
+boss__nvm_node_versions:
+  - stable
+
+boss__nvm_global_packages: []
+boss__nvm_users: []

@@ -1,0 +1,9 @@
+export NVM_DIR="{{ boss__nvm_root }}"
+
+{% if boss__nvm_env == 'system' %}
+. {{ boss__nvm_root }}/nvm.sh
+{% else %}
+if [ -d "$HOME/.nvm" ]; then
+  . {{ boss__nvm_root }}/nvm.sh
+fi
+{% endif %}
