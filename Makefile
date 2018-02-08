@@ -105,7 +105,14 @@ test:
 
 bootstrap: venv
 
-travis: bootstrap venv ci
+travis:
+	$(MAKE) bootstrap
+	$(MAKE) venv
+	$(MAKE) docker_clean
+	$(MAKE) docker_build_ubuntu
+	$(MAKE) start_delegated_docker
+	$(MAKE) ci
+	$(MAKE) docker_clean
 
 .PHONY: docker_build_ubuntu
 docker_build_ubuntu: ## Builds SD Ubuntu docker container
