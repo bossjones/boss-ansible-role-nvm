@@ -57,3 +57,37 @@ scenario:
     - converge
     - verify
     - destroy
+
+
+# NOTE: defalt scenario
+# SOURCE: https://molecule.readthedocs.io/en/latest/configuration.html#dependency
+# scenario:
+#   name: default
+#   create_sequence:
+#     - create
+#     - prepare
+#   check_sequence:
+#     - destroy
+#     - create
+#     - prepare
+#     - converge
+#     - check
+#     - destroy
+#   converge_sequence:
+#     - create
+#     - prepare
+#     - converge
+#   destroy_sequence:
+#     - destroy
+#   test_sequence:
+#     - lint
+#     - destroy
+#     - dependency
+#     - syntax
+#     - create
+#     - prepare
+#     - converge
+#     - idempotence
+#     - side_effect
+#     - verify
+#     - destroy
