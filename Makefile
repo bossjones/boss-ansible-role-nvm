@@ -122,11 +122,12 @@ start_delegated_docker:
 	-it bossjones/ubuntu-trusty:latest sleep infinity & wait
 
 stop_delegated_docker:
-	docker kill nvm-trusty
+	$(MAKE) docker_clean
 	$(MAKE) docker_clean
 
 # SOURCE: https://github.com/lispmeister/rpi-python3/blob/534ee5ab592f0ab0cdd04a202ca492846ab12601/Makefile
 exited := $(shell docker ps -a -q -f status=exited)
+kill   := $(shell docker ps | grep ubuntu-trusty | awk '{print $$1}')
 # untagged := $(shell (docker images | grep "^<none>" | awk -F " " '{print $$3}'))
 # dangling := $(shell docker images -f "dangling=true" -q)
 # tag := $(shell docker images | grep "$(DOCKER_IMAGE_NAME)" | grep "$(DOCKER_IMAGE_VERSION)" |awk -F " " '{print $$3}')
@@ -153,6 +154,10 @@ exited := $(shell docker ps -a -q -f status=exited)
 
 
 docker_clean:
+ifneq ($(strip $(kill)),)
+	@echo "Killing containers: $(kill)"
+	docker kill $(kill)
+endif
 ifneq ($(strip $(exited)),)
 	@echo "Cleaning exited containers: $(exited)"
 	docker rm -v $(exited)
